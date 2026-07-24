@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
+from tkcalendar import DateEntry
 
 
 class ExpenseTrackerUI:
@@ -9,6 +11,7 @@ class ExpenseTrackerUI:
         self.root.geometry("800x400")
         self.action_manager = action_manager
         self.build_ui()
+
 
     def build_ui(self):
         self.treeview = ttk.Treeview(self.root, columns=("id", "description", "amount", "transaction_type"), show="headings")
@@ -28,24 +31,46 @@ class ExpenseTrackerUI:
         self.transaction_window = tk.Toplevel()
         self.transaction_window.title("Add a new transaction")
         self.transaction_window.geometry("400x200")
-        self.amount_var = tk.StringVar()
         self.amount_label = tk.Label(self.transaction_window, text="Please enter the amount:")
         self.amount_label.pack()
+        self.amount_var = tk.StringVar()
         self.amount = tk.Entry(self.transaction_window, textvariable=self.amount_var)
         self.amount.pack()
+        self.transaction_categories = ["Food", "Groceries", "Shopping", "Housing", "Utilities", "Transportation", "Entertainment",
+                                       "Healthcare", "Dining out", "Travel", "Savings/Investments", "Other"]
+        self.transaction_cat_box = ttk.Combobox(self.transaction_window,values=self.transaction_categories)
+        self.transaction_cat_box.set("Select category")
+        self.transaction_cat_box.pack()
+        self.date_label = tk.Label(self.transaction_window,text="Please enter a date:")
+        self.date_label.pack()
+        self.date_selector = DateEntry(self.transaction_window, date_pattern="dd-mm-yyyy")
+        self.date_selector.pack()
+        self.desc_label = tk.Label(self.transaction_window, text="Please enter a description:")
+        self.desc_label.pack()
+        self.desc_var = tk.StringVar()
+        self.desc_entry = tk.Entry(self.transaction_window, textvariable=self.desc_var)
         self.transaction_options = ["Income", "Expense"]
-        self.transaction_box = ttk.Combobox(self.transaction_window,values=self.transaction_options)
-        self.transaction_box.set("Select transaction type")
-        self.transaction_box.pack()
+        self.transaction_type_box = ttk.Combobox(self.transaction_window,values=self.transaction_options)
+        self.transaction_type_box.set("Select transaction type")
+        self.transaction_type_box.pack()
+        self.submit_button = tk.Button(self.transaction_window, text="Submit", command=self.submit_validations)
+        self.submit_button.pack()
 
     def submit_validations(self):
         try:
-            self.num_amount = self.amount_var.get()
-            self.num_amount = float(self.num_amount)
+            self.num_amount = float(self.amount_var.get())
         except ValueError:
-            print("Amount is not a float.")
+            messagebox.showerror("Invalid Amount", "Please enter an amount.")
+            return None
+        if self.transaction_cat_box.get() == "Select category":
+            messagebox.showerror("Invalid Transaction Category", "Please select a transaction category.")
+            return None
+        if self.transaction_type_box.get() == "Select transaction type":
+            messagebox.showerror("Invalid Transaction Type", "Please select a transaction type.")
+            return None
 
-        return self.num_amount
+        self.action_manager.add_transaction(self.num_amount, self.transaction_cat_box.get(), self.date_selector.get(),
+                                            self.desc_entry.get(), self.transaction_type_box.get())
 
     def remove_clicked(self):
         pass
