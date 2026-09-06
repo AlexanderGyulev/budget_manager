@@ -37,8 +37,8 @@ class ExpenseTrackerUI:
         self.amount_var = tk.StringVar()
         self.amount = tk.Entry(self.transaction_window, textvariable=self.amount_var)
         self.amount.pack()
-        self.transaction_categories = ["Food", "Groceries", "Shopping", "Housing", "Utilities", "Transportation", "Entertainment",
-                                       "Healthcare", "Dining out", "Travel", "Savings/Investments", "Other"]
+        self.transaction_categories = ("Food", "Groceries", "Shopping", "Housing", "Utilities", "Transportation", "Entertainment",
+                                       "Healthcare", "Dining out", "Travel", "Savings/Investments", "Other")
         self.transaction_cat_box = ttk.Combobox(self.transaction_window,values=self.transaction_categories)
         self.transaction_cat_box.set("Select category")
         self.transaction_cat_box.pack()
@@ -51,7 +51,7 @@ class ExpenseTrackerUI:
         self.desc_var = tk.StringVar()
         self.desc_entry = tk.Entry(self.transaction_window, textvariable=self.desc_var)
         self.desc_entry.pack()
-        self.transaction_options = ["Income", "Expense"]
+        self.transaction_options = ("Income", "Expense")
         self.transaction_type_box = ttk.Combobox(self.transaction_window,values=self.transaction_options)
         self.transaction_type_box.set("Select transaction type")
         self.transaction_type_box.pack()
@@ -64,10 +64,10 @@ class ExpenseTrackerUI:
         except ValueError:
             messagebox.showerror("Invalid Amount", "Please enter an amount.")
             return None
-        if self.transaction_cat_box.get() == "Select category":
+        if self.transaction_cat_box.get().strip() not in self.transaction_categories:
             messagebox.showerror("Invalid Transaction Category", "Please select a transaction category.")
             return None
-        if self.transaction_type_box.get() == "Select transaction type":
+        if self.transaction_type_box.get().strip() not in self.transaction_options:
             messagebox.showerror("Invalid Transaction Type", "Please select a transaction type.")
             return None
 
