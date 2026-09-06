@@ -11,6 +11,7 @@ class ExpenseTrackerUI:
         self.root.geometry("800x400")
         self.action_manager = action_manager
         self.build_ui()
+        self.reload_ui()
 
 
     def build_ui(self):
@@ -71,6 +72,13 @@ class ExpenseTrackerUI:
 
         self.action_manager.add_transaction(self.num_amount, self.transaction_cat_box.get(), self.date_selector.get(),
                                             self.desc_entry.get(), self.transaction_type_box.get())
+        self.reload_ui()
+
+    def reload_ui(self):
+        initial_data = self.action_manager.cur.execute("SELECT * FROM transactions")
+        data = initial_data.fetchall()
+        for row in data:
+            self.treeview.insert('', 'end', values=(row[0], row[4], row[1], row[5]))
 
     def remove_clicked(self):
         pass
