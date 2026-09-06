@@ -50,6 +50,7 @@ class ExpenseTrackerUI:
         self.desc_label.pack()
         self.desc_var = tk.StringVar()
         self.desc_entry = tk.Entry(self.transaction_window, textvariable=self.desc_var)
+        self.desc_entry.pack()
         self.transaction_options = ["Income", "Expense"]
         self.transaction_type_box = ttk.Combobox(self.transaction_window,values=self.transaction_options)
         self.transaction_type_box.set("Select transaction type")
